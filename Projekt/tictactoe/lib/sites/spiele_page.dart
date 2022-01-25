@@ -151,14 +151,37 @@ class _SpielePageState extends State<SpielePage> {
     String currentPlayer = player.currentPlayer == "X" ? nameX : nameO;
 
     return Center(
-      child: Text(
-        won
-            ? "$lPlayer hat gewonnen"
-            : lost
-                ? "Unentschieden!"
-                : "$currentPlayer ist am Zug",
-        style: playerAnzeigeStyle(),
-        textAlign: TextAlign.center,
+      child: Column(
+        children: [
+          Text(
+            won
+                ? "$lPlayer hat gewonnen"
+                : lost
+                    ? "Unentschieden!"
+                    : "$currentPlayer ist am Zug",
+            style: playerAnzeigeStyle(40),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          won || lost
+              ? SizedBox(
+                  height: 50,
+                  width: 140,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context)
+                        .pushReplacementNamed(SpielePage.route),
+                    child: Text(
+                      "Restart",
+                      style: playerAnzeigeStyle(30),
+                    ),
+                  ),
+                )
+              : const SizedBox(
+                  height: 2,
+                ),
+        ],
       ),
     );
   }

@@ -41,7 +41,9 @@ TextStyle drawerTextStyle() {
   return const TextStyle(color: Colors.blueGrey, fontSize: 25);
 }
 
-TextStyle playerAnzeigeStyle() {
-  return const TextStyle(
-      color: Color(0xFF37474F), fontWeight: FontWeight.bold, fontSize: 40);
+TextStyle playerAnzeigeStyle(double size) {
+  return TextStyle(
+      color: const Color(0xFF37474F),
+      fontWeight: FontWeight.bold,
+      fontSize: size);
 }
