@@ -120,7 +120,15 @@ class _SpielePageState extends State<SpielePage> {
             return Row(
               children: [
                 Flexible(child: testerd),
-                Expanded(child: playeranzeige()),
+                Column(
+                  children: [
+                    Spacer(
+                      flex: won || lost ? 1 : 2,
+                    ),
+                    Expanded(child: playeranzeige()),
+                    const Spacer(),
+                  ],
+                ),
               ],
             );
           } else {
@@ -162,25 +170,27 @@ class _SpielePageState extends State<SpielePage> {
             style: playerAnzeigeStyle(40),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(
-            height: 20,
-          ),
           won || lost
-              ? SizedBox(
-                  height: 50,
-                  width: 140,
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.of(context)
-                        .pushReplacementNamed(SpielePage.route),
-                    child: Text(
-                      "Restart",
-                      style: playerAnzeigeStyle(30),
+              ? Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
+                    SizedBox(
+                      height: 50,
+                      width: 140,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.of(context)
+                            .pushReplacementNamed(SpielePage.route),
+                        child: Text(
+                          "Restart",
+                          style: playerAnzeigeStyle(30),
+                        ),
+                      ),
+                    ),
+                  ],
                 )
-              : const SizedBox(
-                  height: 2,
-                ),
+              : Container(),
         ],
       ),
     );

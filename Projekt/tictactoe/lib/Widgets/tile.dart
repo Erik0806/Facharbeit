@@ -34,6 +34,7 @@ class _TileState extends State<Tile> with AutomaticKeepAliveClientMixin {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             primary: buttonColour,
+            elevation: 10,
           ),
           onPressed: pressed,
           child: Text(
