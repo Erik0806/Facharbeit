@@ -14,19 +14,20 @@ ThemeData _themeData(BuildContext context) {
   return ThemeData(
     brightness: Brightness.light,
     colorScheme: const ColorScheme(
-        primary: Colors.blueGrey,
-        primaryVariant: Colors.lightBlue,
-        secondary: Colors.amber,
-        secondaryVariant: Colors.amber,
-        surface: Colors.blueGrey,
-        background: Colors.black,
-        error: Colors.red,
-        onPrimary: Colors.white,
-        onSecondary: Colors.amber,
-        onSurface: Colors.blueGrey,
-        onBackground: Colors.grey,
-        onError: Colors.red,
-        brightness: Brightness.light),
+      primary: Colors.blueGrey,
+      primaryVariant: Colors.lightBlue,
+      secondary: Colors.amber,
+      secondaryVariant: Colors.amber,
+      surface: Colors.blueGrey,
+      background: Colors.black,
+      error: Colors.red,
+      onPrimary: Colors.white,
+      onSecondary: Colors.amber,
+      onSurface: Colors.blueGrey,
+      onBackground: Colors.grey,
+      onError: Colors.red,
+      brightness: Brightness.light,
+    ),
   );
 }
 

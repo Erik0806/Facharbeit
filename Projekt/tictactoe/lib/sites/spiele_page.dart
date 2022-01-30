@@ -122,9 +122,7 @@ class _SpielePageState extends State<SpielePage> {
                 Flexible(child: testerd),
                 Column(
                   children: [
-                    Spacer(
-                      flex: won || lost ? 1 : 2,
-                    ),
+                    const Spacer(),
                     Expanded(child: playeranzeige()),
                     const Spacer(),
                   ],
@@ -161,36 +159,36 @@ class _SpielePageState extends State<SpielePage> {
     return Center(
       child: Column(
         children: [
-          Text(
-            won
-                ? "$lPlayer hat gewonnen"
-                : lost
-                    ? "Unentschieden!"
-                    : "$currentPlayer ist am Zug",
-            style: playerAnzeigeStyle(40),
-            textAlign: TextAlign.center,
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              won
+                  ? "$lPlayer hat gewonnen"
+                  : lost
+                      ? "Unentschieden!"
+                      : "$currentPlayer ist am Zug",
+              style: playerAnzeigeStyle(40),
+              textAlign: TextAlign.center,
+            ),
           ),
-          won || lost
-              ? Column(
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      width: 140,
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.of(context)
-                            .pushReplacementNamed(SpielePage.route),
-                        child: Text(
-                          "Restart",
-                          style: playerAnzeigeStyle(30),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : Container(),
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            height: 50,
+            width: 140,
+            child: Visibility(
+              visible: won || lost,
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context)
+                    .pushReplacementNamed(SpielePage.route),
+                child: Text(
+                  "Restart",
+                  style: playerAnzeigeStyle(30),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

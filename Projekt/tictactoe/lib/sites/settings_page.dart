@@ -86,6 +86,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       )
                     ],
                   ),
+                  //const Divider(),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -129,6 +130,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       )
                     ],
+                  ),
+                  const Divider(
+                    endIndent: 50,
+                    indent: 50,
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
