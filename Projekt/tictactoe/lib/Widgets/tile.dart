@@ -47,12 +47,12 @@ class _TileState extends State<Tile> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  double getSize(BuildContext context) {
-    return MediaQuery.of(context).size.width - 48 >
-            MediaQuery.of(context).size.height - 104
-        ? MediaQuery.of(context).size.height - 104
-        : MediaQuery.of(context).size.width - 48;
-  }
+  // double getSize(BuildContext context) {
+  //   return MediaQuery.of(context).size.width - 48 >
+  //           MediaQuery.of(context).size.height - 104
+  //       ? MediaQuery.of(context).size.height - 104
+  //       : MediaQuery.of(context).size.width - 48;
+  // }
 
   pressed() {
     setState(() {
