@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tictactoe/helper/change_provider.dart';
 import 'package:tictactoe/helper/player.dart';
@@ -37,10 +38,11 @@ class _TileState extends State<Tile> with AutomaticKeepAliveClientMixin {
             elevation: 10,
           ),
           onPressed: pressed,
-          child: Text(
+          child: AutoSizeText(
             text,
             style: const TextStyle(fontSize: 60),
             textScaleFactor: getTextScalebyWithAndHeigth(context),
+            maxLines: 1,
           ),
         ),
       ),
