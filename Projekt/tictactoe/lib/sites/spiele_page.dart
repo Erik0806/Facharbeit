@@ -6,6 +6,8 @@ import 'package:tictactoe/helper/change_provider.dart';
 import 'package:tictactoe/helper/player.dart';
 import 'package:tictactoe/layout/theme_data.dart';
 
+import '../Widgets/spielstandsanzeige.dart';
+
 class SpielePage extends StatefulWidget {
   static const String route = '/spiel';
 
@@ -18,94 +20,43 @@ class SpielePage extends StatefulWidget {
 }
 
 ///Die Seite die Aufgerufen wird wenn die App gestartet wird. [title] ist der Text der oben in der AppBar steht.
-///[player] ein Objekt des Typs Player um den aktuellen und letzten Spieler bestimmen zu können. [changeProvider]
-///um nach einem Zug das Interfaze zu aktualisieren. [fields] ist eine zweidimensionale Repräsentation des Spielfeldes.
-///[color] beschreibt die Hintergrundfarbe der Seite. [won] ob das  Spiel gewonnen wurde. [cPlayer] beschreibt den
-///aktuellen Spieler in Form eines Strings. [ignoring] ob man mit den einzelnen Tiles interagieren kann und [lost] ob
+///[_player] ein Objekt des Typs Player um den aktuellen und letzten Spieler bestimmen zu können. [_changeProvider]
+///um nach einem Zug das Interfaze zu aktualisieren. [_fields] ist eine zweidimensionale Repräsentation des Spielfeldes.
+///[color] beschreibt die Hintergrundfarbe der Seite. [_won] ob das  Spiel gewonnen wurde. [_cPlayer] beschreibt den
+///aktuellen Spieler in Form eines Strings. [_ignoring] ob man mit den einzelnen Tiles interagieren kann und [_lost] ob
 ///das Spiel verloren wurde, sprich das gesamte Spielfeld ohne eine vorherigen Sieg voll ist.
 class _SpielePageState extends State<SpielePage> {
-  String title = "TicTacToe";
-  ChangeProvider changeProvider = ChangeProvider();
-  Player player = Player(currentPlayer: "X", lastPlayer: "O");
-  late List<List<String>> fields;
-  bool won = false;
-  String cPlayer = "X";
-  bool ignoring = false;
-  bool lost = false;
-  String nameX = "Spieler X";
-  String nameO = "Spieler O";
+  final ChangeProvider _changeProvider = ChangeProvider();
+  final Player _player = Player(currentPlayer: "X", lastPlayer: "O");
+  late List<List<String>> _fields;
+  bool _won = false;
+  String _cPlayer = "X";
+  bool _ignoring = false;
+  bool _lost = false;
+  String _nameX = "Spieler X";
+  String _nameO = "Spieler O";
 
   Color pickerColor = Colors.white;
-
-  @override
-  void initState() {
-    super.initState();
-    setEmptyFields();
-    changeProvider.addListener(onChange);
-    getValues();
-  }
 
   @override
   Widget build(BuildContext context) {
     return themed(
       context,
       Scaffold(
-          appBar: AppBar(title: Text(title)),
+          appBar: AppBar(title: const Text("TicTacToe")),
           drawer: buildDrawer(context, SpielePage.route),
-          body: _layouthelper(context, player)),
+          body: _layouthelper(context, _player)),
     );
   }
 
-  /// Quelle: https://github.com/JohannesMilke/tic_tac_toe_example/blob/master/lib/main.dart
-  /// Erstellt eine zweidimensionaleListe mit 3*3 Feldern als Repräsentation des Spielfeldes
-  void setEmptyFields() => setState(() => fields = List.generate(
-        3,
-        (_) => List.generate(3, (_) => ""),
-      ));
-
-  ///Diese Methode wird jedesmal aufgerufen, wenn ein Spielzug gemacht wird
-  void onChange() {
-    fields[changeProvider.x][changeProvider.y] = player.lastPlayer;
-
-    setState(() {
-      cPlayer = player.currentPlayer;
-    });
-
-    if (isWinner(changeProvider.x, changeProvider.y)) {
-      setState(() {
-        ignoring = true;
-        pickerColor = Colors.green;
-        won = true;
-      });
-    } else if (isEnd()) {
-      setState(() {
-        pickerColor = Colors.red.shade600;
-        ignoring = true;
-        lost = true;
-      });
-    }
-  }
-
-  /// Quelle: https://github.com/JohannesMilke/tic_tac_toe_example/blob/master/lib/main.dart
-  /// Prüft ob das Spielfeld voll ist;
-  bool isEnd() =>
-      fields.every((values) => values.every((value) => value != ""));
-
-  /// Quelle: https://stackoverflow.com/a/1058804
-  /// Prüft ob eine Siegbedingung vorliegt
-  bool isWinner(int x, int y) {
-    var col = 0, row = 0, diag = 0, rdiag = 0;
-    final player = fields[x][y];
-    const n = 3;
-
-    for (int i = 0; i < n; i++) {
-      if (fields[x][i] == player) col++;
-      if (fields[i][y] == player) row++;
-      if (fields[i][i] == player) diag++;
-      if (fields[i][n - i - 1] == player) rdiag++;
-    }
-
-    return row == n || col == n || diag == n || rdiag == n;
+  ///Ruft die Methode zum Daten abrufen auf und sorgt dafür, dass die Methode onChange bei einer Spielfeldänderung
+  ///aufgerufen wird
+  @override
+  void initState() {
+    super.initState();
+    setEmptyFields();
+    _changeProvider.addListener(onChange);
+    getValues();
   }
 
   ///Erstellt das Layout der Spieleseite, wo sowohl der Text als auch das Spielfeld angezeigt werden
@@ -123,7 +74,14 @@ class _SpielePageState extends State<SpielePage> {
                 Column(
                   children: [
                     const Spacer(),
-                    Expanded(child: playeranzeige()),
+                    Expanded(
+                        child: spielstandsanzeige(
+                            player: player,
+                            nameX: _nameX,
+                            nameO: _nameO,
+                            won: _won,
+                            lost: _lost,
+                            context: context)),
                     const Spacer(),
                   ],
                 ),
@@ -135,7 +93,13 @@ class _SpielePageState extends State<SpielePage> {
                 const SizedBox(
                   height: 25,
                 ),
-                playeranzeige(),
+                spielstandsanzeige(
+                    player: player,
+                    nameX: _nameX,
+                    nameO: _nameO,
+                    won: _won,
+                    lost: _lost,
+                    context: context),
                 const Spacer(),
                 Expanded(
                   flex: 100,
@@ -146,50 +110,6 @@ class _SpielePageState extends State<SpielePage> {
             );
           }
         }),
-      ),
-    );
-  }
-
-  ///Textanzeige über oder rechts neben dem Spielfeld, während des Spiels zeigt es den aktuellen Spieler an
-  ///danach den Sieger
-  Widget playeranzeige() {
-    String lPlayer = player.lastPlayer == "X" ? nameX : nameO;
-    String currentPlayer = player.currentPlayer == "X" ? nameX : nameO;
-
-    return Center(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              won
-                  ? "$lPlayer hat gewonnen"
-                  : lost
-                      ? "Unentschieden!"
-                      : "$currentPlayer ist am Zug",
-              style: playerAnzeigeStyle(40),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            height: 50,
-            width: 140,
-            child: Visibility(
-              visible: won || lost,
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context)
-                    .pushReplacementNamed(SpielePage.route),
-                child: Text(
-                  "Restart",
-                  style: playerAnzeigeStyle(30),
-                ),
-              ),
-            ),
-          )
-        ],
       ),
     );
   }
@@ -207,16 +127,67 @@ class _SpielePageState extends State<SpielePage> {
         int y = determinexy(index)[1];
 
         return IgnorePointer(
-          ignoring: ignoring,
+          ignoring: _ignoring,
           child: Tile(
             player: player,
             x: x,
             y: y,
-            changeProvider: changeProvider,
+            changeProvider: _changeProvider,
           ),
         );
       },
     );
+  }
+
+  /// Quelle: https://github.com/JohannesMilke/tic_tac_toe_example/blob/master/lib/main.dart
+  /// Erstellt eine zweidimensionaleListe mit 3*3 Feldern als Repräsentation des Spielfeldes
+  void setEmptyFields() => setState(() => _fields = List.generate(
+        3,
+        (_) => List.generate(3, (_) => ""),
+      ));
+
+  ///Diese Methode wird jedesmal aufgerufen, wenn ein Spielzug gemacht wird
+  void onChange() {
+    _fields[_changeProvider.x][_changeProvider.y] = _player.lastPlayer;
+
+    //Die Seite wird einmal neu gebaut, damit die Spielstandsanzeige aktualisiert wird
+    setState(() {});
+
+    if (isWinner(_changeProvider.x, _changeProvider.y)) {
+      setState(() {
+        _ignoring = true;
+        pickerColor = Colors.green;
+        _won = true;
+      });
+    } else if (isEnd()) {
+      setState(() {
+        pickerColor = Colors.red.shade600;
+        _ignoring = true;
+        _lost = true;
+      });
+    }
+  }
+
+  /// Quelle: https://github.com/JohannesMilke/tic_tac_toe_example/blob/master/lib/main.dart
+  /// Prüft ob das Spielfeld voll ist;
+  bool isEnd() =>
+      _fields.every((values) => values.every((value) => value != ""));
+
+  /// Quelle: https://stackoverflow.com/a/1058804
+  /// Prüft ob eine Siegbedingung vorliegt
+  bool isWinner(int x, int y) {
+    var col = 0, row = 0, diag = 0, rdiag = 0;
+    final player = _fields[x][y];
+    const n = 3;
+
+    for (int i = 0; i < n; i++) {
+      if (_fields[x][i] == player) col++;
+      if (_fields[i][y] == player) row++;
+      if (_fields[i][i] == player) diag++;
+      if (_fields[i][n - i - 1] == player) rdiag++;
+    }
+
+    return row == n || col == n || diag == n || rdiag == n;
   }
 
   ///Baut die Rückgabe des Itembuilders (1-9) in passende x und y werte einer zweidimensionalen Liste mit 3*3 Feldern um
@@ -268,6 +239,8 @@ class _SpielePageState extends State<SpielePage> {
     return values;
   }
 
+  /// Lädt die gespeicherten Daten, also die Namen und die Hintergrundfarbe aus dem Speicher und trägt diese in diese in die
+  /// dafür vorgesehenen Variablen ein.
   getValues() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences.containsKey('pickerColor')) {
@@ -280,14 +253,14 @@ class _SpielePageState extends State<SpielePage> {
     }
     if (sharedPreferences.containsKey('X')) {
       setState(() {
-        nameX = sharedPreferences.getString("X") ?? "Spieler X";
+        _nameX = sharedPreferences.getString("X") ?? "Spieler X";
       });
     } else {
       sharedPreferences.setString('X', "Spieler X");
     }
     if (sharedPreferences.containsKey('O')) {
       setState(() {
-        nameO = sharedPreferences.getString("O") ?? "Spieler O";
+        _nameO = sharedPreferences.getString("O") ?? "Spieler O";
       });
     } else {
       sharedPreferences.setString('O', "Spieler O");
