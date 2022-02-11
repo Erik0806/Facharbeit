@@ -4,8 +4,8 @@ import '../helper/player.dart';
 import '../layout/theme_data.dart';
 import '../sites/spiele_page.dart';
 
-class spielstandsanzeige extends StatelessWidget {
-  const spielstandsanzeige({
+class SpielstandsAnzeige extends StatelessWidget {
+  const SpielstandsAnzeige({
     Key? key,
     required this.player,
     required this.nameX,
@@ -31,7 +31,7 @@ class spielstandsanzeige extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Text(
               won
                   ? "$lPlayer hat gewonnen"

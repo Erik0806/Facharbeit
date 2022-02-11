@@ -40,9 +40,7 @@ class _TileState extends State<Tile> with AutomaticKeepAliveClientMixin {
           onPressed: pressed,
           child: AutoSizeText(
             text,
-            style: const TextStyle(fontSize: 60),
-            textScaleFactor: getTextScalebyWithAndHeigth(context),
-            maxLines: 1,
+            style: const TextStyle(fontSize: 180),
           ),
         ),
       ),

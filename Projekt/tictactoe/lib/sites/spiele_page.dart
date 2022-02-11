@@ -22,15 +22,13 @@ class SpielePage extends StatefulWidget {
 ///Die Seite die Aufgerufen wird wenn die App gestartet wird. [title] ist der Text der oben in der AppBar steht.
 ///[_player] ein Objekt des Typs Player um den aktuellen und letzten Spieler bestimmen zu können. [_changeProvider]
 ///um nach einem Zug das Interfaze zu aktualisieren. [_fields] ist eine zweidimensionale Repräsentation des Spielfeldes.
-///[color] beschreibt die Hintergrundfarbe der Seite. [_won] ob das  Spiel gewonnen wurde. [_cPlayer] beschreibt den
-///aktuellen Spieler in Form eines Strings. [_ignoring] ob man mit den einzelnen Tiles interagieren kann und [_lost] ob
+///[color] beschreibt die Hintergrundfarbe der Seite. [_won] ob das  Spiel gewonnen wurde. [_ignoring] ob man mit den einzelnen Tiles interagieren kann und [_lost] ob
 ///das Spiel verloren wurde, sprich das gesamte Spielfeld ohne eine vorherigen Sieg voll ist.
 class _SpielePageState extends State<SpielePage> {
   final ChangeProvider _changeProvider = ChangeProvider();
   final Player _player = Player(currentPlayer: "X", lastPlayer: "O");
   late List<List<String>> _fields;
   bool _won = false;
-  String _cPlayer = "X";
   bool _ignoring = false;
   bool _lost = false;
   String _nameX = "Spieler X";
@@ -75,7 +73,7 @@ class _SpielePageState extends State<SpielePage> {
                   children: [
                     const Spacer(),
                     Expanded(
-                        child: spielstandsanzeige(
+                        child: SpielstandsAnzeige(
                             player: player,
                             nameX: _nameX,
                             nameO: _nameO,
@@ -93,7 +91,7 @@ class _SpielePageState extends State<SpielePage> {
                 const SizedBox(
                   height: 25,
                 ),
-                spielstandsanzeige(
+                SpielstandsAnzeige(
                     player: player,
                     nameX: _nameX,
                     nameO: _nameO,
@@ -150,13 +148,10 @@ class _SpielePageState extends State<SpielePage> {
   void onChange() {
     _fields[_changeProvider.x][_changeProvider.y] = _player.lastPlayer;
 
-    //Die Seite wird einmal neu gebaut, damit die Spielstandsanzeige aktualisiert wird
-    setState(() {});
-
     if (isWinner(_changeProvider.x, _changeProvider.y)) {
       setState(() {
-        _ignoring = true;
         pickerColor = Colors.green;
+        _ignoring = true;
         _won = true;
       });
     } else if (isEnd()) {
@@ -165,6 +160,9 @@ class _SpielePageState extends State<SpielePage> {
         _ignoring = true;
         _lost = true;
       });
+    } else {
+      //Die Seite muss einmal neu gebaut werden, damit die Spielstandsanzeige aktualisiert wird
+      setState(() {});
     }
   }
 

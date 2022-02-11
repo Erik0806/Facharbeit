@@ -15,9 +15,9 @@ ThemeData _themeData(BuildContext context) {
     brightness: Brightness.light,
     colorScheme: const ColorScheme(
       primary: Colors.blueGrey,
-      primaryVariant: Colors.lightBlue,
+      primaryContainer: Colors.lightBlue,
       secondary: Colors.amber,
-      secondaryVariant: Colors.amber,
+      secondaryContainer: Colors.amber,
       surface: Colors.blueGrey,
       background: Colors.black,
       error: Colors.red,
