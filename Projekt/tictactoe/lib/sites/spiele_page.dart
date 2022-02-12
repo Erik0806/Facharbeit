@@ -72,14 +72,13 @@ class _SpielePageState extends State<SpielePage> {
                 Column(
                   children: [
                     const Spacer(),
-                    Expanded(
-                        child: SpielstandsAnzeige(
-                            player: player,
-                            nameX: _nameX,
-                            nameO: _nameO,
-                            won: _won,
-                            lost: _lost,
-                            context: context)),
+                    SpielstandsAnzeige(
+                        player: player,
+                        nameX: _nameX,
+                        nameO: _nameO,
+                        won: _won,
+                        lost: _lost,
+                        context: context),
                     const Spacer(),
                   ],
                 ),
