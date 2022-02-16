@@ -47,13 +47,8 @@ class _TileState extends State<Tile> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  // double getSize(BuildContext context) {
-  //   return MediaQuery.of(context).size.width - 48 >
-  //           MediaQuery.of(context).size.height - 104
-  //       ? MediaQuery.of(context).size.height - 104
-  //       : MediaQuery.of(context).size.width - 48;
-  // }
-
+  ///Wird bei jedem Drücken des Tiles aufgerufen. Macht ihn unantastbar, aktualisiert die Variablen und
+  ///sagt dem Provider, dass sich das Spielfeld aktualisiert hat.
   pressed() {
     setState(() {
       ignoring = true;
@@ -63,7 +58,6 @@ class _TileState extends State<Tile> with AutomaticKeepAliveClientMixin {
         widget.player.currentPlayer = "O";
         widget.player.lastPlayer = "X";
         buttonColour = const Color(0xFFB0BEC5);
-        //Colors.blueGrey
       } else {
         widget.player.currentPlayer = "X";
         widget.player.lastPlayer = "O";

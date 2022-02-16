@@ -4,6 +4,7 @@ import 'package:tictactoe/Widgets/drawer.dart';
 import 'package:tictactoe/Widgets/tile.dart';
 import 'package:tictactoe/helper/change_provider.dart';
 import 'package:tictactoe/helper/player.dart';
+import 'package:tictactoe/helper/sharedPreferences.dart';
 import 'package:tictactoe/layout/theme_data.dart';
 
 import '../Widgets/spielstandsanzeige.dart';
@@ -22,7 +23,7 @@ class SpielePage extends StatefulWidget {
 ///Die Seite die Aufgerufen wird wenn die App gestartet wird. [title] ist der Text der oben in der AppBar steht.
 ///[_player] ein Objekt des Typs Player um den aktuellen und letzten Spieler bestimmen zu können. [_changeProvider]
 ///um nach einem Zug das Interfaze zu aktualisieren. [_fields] ist eine zweidimensionale Repräsentation des Spielfeldes.
-///[color] beschreibt die Hintergrundfarbe der Seite. [_won] ob das  Spiel gewonnen wurde. [_ignoring] ob man mit den einzelnen Tiles interagieren kann und [_lost] ob
+///[backgroundColour] beschreibt die Hintergrundfarbe der Seite. [_won] ob das  Spiel gewonnen wurde. [_ignoring] ob man mit den einzelnen Tiles interagieren kann und [_lost] ob
 ///das Spiel verloren wurde, sprich das gesamte Spielfeld ohne eine vorherigen Sieg voll ist.
 class _SpielePageState extends State<SpielePage> {
   final ChangeProvider _changeProvider = ChangeProvider();
@@ -34,7 +35,7 @@ class _SpielePageState extends State<SpielePage> {
   String _nameX = "Spieler X";
   String _nameO = "Spieler O";
 
-  Color pickerColor = Colors.white;
+  Color backgroundColour = Colors.white;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class _SpielePageState extends State<SpielePage> {
     Widget testerd = spielfeld(context, player);
     return SafeArea(
       child: Container(
-        color: pickerColor,
+        color: backgroundColour,
         child: LayoutBuilder(builder: (context, constraints) {
           if (constraints.maxWidth > 700) {
             return Row(
@@ -149,13 +150,13 @@ class _SpielePageState extends State<SpielePage> {
 
     if (isWinner(_changeProvider.x, _changeProvider.y)) {
       setState(() {
-        pickerColor = Colors.green;
+        backgroundColour = Colors.green;
         _ignoring = true;
         _won = true;
       });
     } else if (isEnd()) {
       setState(() {
-        pickerColor = Colors.red.shade600;
+        backgroundColour = Colors.red.shade600;
         _ignoring = true;
         _lost = true;
       });
@@ -239,28 +240,15 @@ class _SpielePageState extends State<SpielePage> {
   /// Lädt die gespeicherten Daten, also die Namen und die Hintergrundfarbe aus dem Speicher und trägt diese in diese in die
   /// dafür vorgesehenen Variablen ein.
   getValues() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.containsKey('pickerColor')) {
-      setState(() {
-        pickerColor = Color(
-            sharedPreferences.getInt('pickerColor') ?? Colors.white.value);
-      });
-    } else {
-      sharedPreferences.setInt('pickerColor', Colors.white.value);
-    }
-    if (sharedPreferences.containsKey('X')) {
-      setState(() {
-        _nameX = sharedPreferences.getString("X") ?? "Spieler X";
-      });
-    } else {
-      sharedPreferences.setString('X', "Spieler X");
-    }
-    if (sharedPreferences.containsKey('O')) {
-      setState(() {
-        _nameO = sharedPreferences.getString("O") ?? "Spieler O";
-      });
-    } else {
-      sharedPreferences.setString('O', "Spieler O");
-    }
+    var colour = await getColour();
+    var nameX = await getNameX();
+    var nameO = await getNameO();
+    setState(
+      () {
+        backgroundColour = colour;
+        _nameX = nameX;
+        _nameO = nameO;
+      },
+    );
   }
 }

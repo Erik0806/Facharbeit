@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe/Widgets/drawer.dart';
+import 'package:tictactoe/helper/sharedPreferences.dart' as sHelper;
 import 'package:tictactoe/layout/theme_data.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -12,13 +13,13 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  Color pickerColor = Colors.white;
+  Color backgroundColour = Colors.white;
   String nameX = "Spieler X";
   String nameO = "Spieler O";
 
   @override
   void initState() {
-    getColor();
+    getColour();
     getName();
     super.initState();
   }
@@ -36,7 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           drawer: buildDrawer(context, SettingsPage.route),
           body: Container(
-            color: pickerColor,
+            color: backgroundColour,
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -154,7 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: SizedBox(
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: () => pickColor(context),
+                              onPressed: () => pickColour(context),
                               child: const Text(
                                 "Hintergrundfarbe wählen",
                                 textAlign: TextAlign.center,
@@ -169,8 +170,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           height: 50,
                           child: ElevatedButton(
                               onPressed: () {
-                                changeColor(Colors.white);
-                                saveColor(pickerColor);
+                                changeColour(Colors.white);
+                                saveColour(backgroundColour);
                               },
                               child: const Icon(Icons.replay)),
                         ),
@@ -184,31 +185,30 @@ class _SettingsPageState extends State<SettingsPage> {
         ));
   }
 
-  getColor() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.containsKey('pickerColor')) {
-      setState(() {
-        pickerColor = Color(
-            sharedPreferences.getInt('pickerColor') ?? Colors.white.value);
-      });
-    } else {
-      sharedPreferences.setInt('pickerColor', Colors.white.value);
-    }
+  ///Ruft die gespeicherte HintergrundFarbe ab
+  getColour() async {
+    var colour = await sHelper.getColour();
+    setState(() {
+      backgroundColour = colour;
+    });
   }
 
-  void changeColor(Color color) {
-    setState(() => pickerColor = color);
+  ///Ändert die Hintergrundfarbe
+  void changeColour(Color color) {
+    setState(() => backgroundColour = color);
   }
 
-  void pickColor(BuildContext context) => showDialog(
+  ///Zeigt den Dialog zum Ändern der Farbe an
+  ///Leicht abgeänderte Version von https://pub.dev/packages/flutter_colorpicker
+  void pickColour(BuildContext context) => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          content: buildColorPicker(),
+          content: buildColourPicker(),
           actions: <Widget>[
             ElevatedButton(
               child: const Text('Got it'),
               onPressed: () {
-                saveColor(pickerColor);
+                saveColour(backgroundColour);
                 Navigator.of(context).pop();
               },
             ),
@@ -216,35 +216,28 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       );
 
-  Widget buildColorPicker() =>
-      ColorPicker(pickerColor: pickerColor, onColorChanged: changeColor);
+  Widget buildColourPicker() =>
+      ColorPicker(pickerColor: backgroundColour, onColorChanged: changeColour);
 
-  void saveColor(Color color) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setInt('pickerColor', color.value);
+  void saveColour(Color color) {
+    sHelper.saveBackgroundColour(color);
   }
 
   void saveNames(String key, String name) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString(key, name);
-    setState(() {
-      if (key == "X") {
-        nameX = name;
-      } else {
-        nameO = name;
-      }
-    });
+    sHelper.saveNames(key, name);
+    setState(
+      () {
+        if (key == "X") {
+          nameX = name;
+        } else {
+          nameO = name;
+        }
+      },
+    );
   }
 
   getName() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (!sharedPreferences.containsKey("X")) {
-      sharedPreferences.setString("X", "Spieler X");
-    }
-    if (!sharedPreferences.containsKey("O")) {
-      sharedPreferences.setString("O", "Spieler O");
-    }
-    nameX = sharedPreferences.getString("X") ?? "Spieler X";
-    nameO = sharedPreferences.getString("O") ?? "Spieler O";
+    nameX = await sHelper.getNameX();
+    nameO = await sHelper.getNameO();
   }
 }

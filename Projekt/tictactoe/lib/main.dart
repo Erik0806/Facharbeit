@@ -8,6 +8,7 @@ import 'package:tictactoe/sites/spiele_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //Auf dem Handy nur im Hochformat, da das sonst nicht gut aussieht
   if (!kIsWeb) {
     if (Platform.isAndroid || Platform.isIOS) {
       await SystemChrome.setPreferredOrientations(
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'TicTacToe',
       home: const SpielePage(),
       routes: <String, WidgetBuilder>{
         SpielePage.route: (context) => const SpielePage(),

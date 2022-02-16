@@ -1,15 +1,5 @@
 import 'package:flutter/material.dart';
 
-double getTextScalebyWithAndHeigth(BuildContext context) {
-  return MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
-      ? MediaQuery.of(context).size.height / 320.0
-      : MediaQuery.of(context).size.width / 320;
-}
-
-double getTextScaleByWidth(BuildContext context) {
-  return MediaQuery.of(context).size.width / 320.0;
-}
-
 ThemeData _themeData(BuildContext context) {
   return ThemeData(
     brightness: Brightness.light,
