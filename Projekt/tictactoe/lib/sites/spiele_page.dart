@@ -66,22 +66,28 @@ class _SpielePageState extends State<SpielePage> {
       child: Container(
         color: backgroundColour,
         child: LayoutBuilder(builder: (context, constraints) {
-          if (constraints.maxWidth > 700) {
+          if (constraints.maxWidth > 800) {
             return Row(
               children: [
-                Flexible(child: testerd),
-                Column(
-                  children: [
-                    const Spacer(),
-                    SpielstandsAnzeige(
+                SizedBox(
+                  child: testerd,
+                  width: constraints.maxHeight,
+                ),
+                Flexible(
+                  child: Column(
+                    children: [
+                      const Spacer(),
+                      SpielstandsAnzeige(
                         player: player,
                         nameX: _nameX,
                         nameO: _nameO,
                         won: _won,
                         lost: _lost,
-                        context: context),
-                    const Spacer(),
-                  ],
+                        context: context,
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
                 ),
               ],
             );
